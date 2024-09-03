@@ -24,12 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="AutoMapper\" />
-    <Folder Include="Contract\" />
-    <Folder Include="Domain\Repository\Class\" />
-    <Folder Include="Domain\Repository\Interface\" />
-    <Folder Include="Domain\Service\Class\" />
-    <Folder Include="Domain\Service\Interface\" />
   </ItemGroup>
 
 </Project>

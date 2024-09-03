@@ -1,4 +1,9 @@
+using AutoMapper;
+using EstoqueAPI.AutoMapper;
 using EstoqueAPI.Data;
+using EstoqueAPI.Domain.Models;
+using EstoqueAPI.Domain.Repository.Class;
+using EstoqueAPI.Domain.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +19,14 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PADRAO"));
 });
+
+builder.Services.AddAutoMapper(
+    typeof(ProdutoProfile),
+    typeof(CategoriaProfile),
+    typeof(MovimentacaoEstoqueProfile)
+    );
+
+builder.Services.AddScoped<IBaseRepository<Produto, int>, ProdutoRepository>();
 
 var app = builder.Build();
 
