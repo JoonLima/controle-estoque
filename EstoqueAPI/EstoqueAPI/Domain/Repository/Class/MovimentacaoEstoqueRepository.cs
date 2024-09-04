@@ -1,33 +1,53 @@
-﻿using EstoqueAPI.Domain.Models;
+﻿using EstoqueAPI.Data;
+using EstoqueAPI.Domain.Models;
 using EstoqueAPI.Domain.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstoqueAPI.Domain.Repository.Class
 {
     public class MovimentacaoEstoqueRepository : IBaseRepository<MovimentacaoEstoque, int>
     {
-        public Task<MovimentacaoEstoque> Atualizar(MovimentacaoEstoque entidade)
+        private readonly ApplicationContext _context;
+        public MovimentacaoEstoqueRepository(ApplicationContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<MovimentacaoEstoque> Atualizar(MovimentacaoEstoque entidade)
+        {
+            var movimentacaoEstoque = await ObterPorId(entidade.Id);
+
+            if (movimentacaoEstoque == null) throw new Exception("Movimentação de estoque não encontrada.");
+
+            _context.MovimentacaoEstoque.Update(entidade);
+            await _context.SaveChangesAsync();
+            return await ObterPorId(entidade.Id);
         }
 
-        public Task<MovimentacaoEstoque> Criar(MovimentacaoEstoque entidade)
+        public async Task<MovimentacaoEstoque> Criar(MovimentacaoEstoque entidade)
         {
-            throw new NotImplementedException();
+            await _context.MovimentacaoEstoque.AddAsync(entidade);
+            await _context.SaveChangesAsync();
+            return entidade;
         }
 
-        public Task Deletar(MovimentacaoEstoque entidade)
+        public async Task Deletar(MovimentacaoEstoque entidade)
         {
-            throw new NotImplementedException();
+            var movimentacaoEstoque = await ObterPorId(entidade.Id);
+
+            if (movimentacaoEstoque == null) throw new Exception("Movimentação de estoque não encontrada.");
+
+            _context.MovimentacaoEstoque.Remove(movimentacaoEstoque);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<MovimentacaoEstoque>> Obter()
+        public async Task<IEnumerable<MovimentacaoEstoque>> Obter()
         {
-            throw new NotImplementedException();
+            return await _context.MovimentacaoEstoque.ToListAsync();
         }
 
-        public Task<MovimentacaoEstoque> ObterPorId(int id)
+        public async Task<MovimentacaoEstoque> ObterPorId(int id)
         {
-            throw new NotImplementedException();
+            return await _context.MovimentacaoEstoque.FindAsync(id) ?? throw new Exception("Movimentação de estoque não encontrada.");
         }
     }
 }

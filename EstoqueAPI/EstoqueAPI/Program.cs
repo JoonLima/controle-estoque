@@ -1,9 +1,14 @@
 using AutoMapper;
 using EstoqueAPI.AutoMapper;
+using EstoqueAPI.Contract.Categoria;
+using EstoqueAPI.Contract.MovimentacaoEstoque;
+using EstoqueAPI.Contract.Produto;
 using EstoqueAPI.Data;
 using EstoqueAPI.Domain.Models;
 using EstoqueAPI.Domain.Repository.Class;
 using EstoqueAPI.Domain.Repository.Interface;
+using EstoqueAPI.Domain.Service.Class;
+using EstoqueAPI.Domain.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +32,12 @@ builder.Services.AddAutoMapper(
     );
 
 builder.Services.AddScoped<IBaseRepository<Produto, int>, ProdutoRepository>();
+builder.Services.AddScoped<IBaseService<ProdutoRequestContract, ProdutoResponseContract, int>, ProdutoService>();
+builder.Services.AddScoped<IBaseRepository<Categoria, int>, CategoriaRepository>();
+builder.Services.AddScoped<IBaseService<CategoriaRequestContract, CategoriaResponseContract, int>, CategoriaService>();
+builder.Services.AddScoped<IBaseRepository<MovimentacaoEstoque, int>, MovimentacaoEstoqueRepository>();
+builder.Services.AddScoped<IBaseService<MovimentacaoEstoqueRequestContract, MovimentacaoEstoqueResponseContract, int>, MovimentacaoEstoqueService>();
+
 
 var app = builder.Build();
 

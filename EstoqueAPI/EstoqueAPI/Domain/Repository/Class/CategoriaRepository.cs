@@ -1,33 +1,53 @@
-﻿using EstoqueAPI.Domain.Models;
+﻿using EstoqueAPI.Data;
+using EstoqueAPI.Domain.Models;
 using EstoqueAPI.Domain.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstoqueAPI.Domain.Repository.Class
 {
     public class CategoriaRepository : IBaseRepository<Categoria, int>
     {
-        public Task<Categoria> Atualizar(Categoria entidade)
+        private readonly ApplicationContext _context;
+        public CategoriaRepository(ApplicationContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<Categoria> Atualizar(Categoria entidade)
+        {
+            var categoria = await ObterPorId(entidade.Id);
+
+            if (categoria == null) throw new Exception("Categoria não encontrada.");
+
+            _context.Categoria.Update(entidade);
+            await _context.SaveChangesAsync();
+            return await ObterPorId(entidade.Id);
         }
 
-        public Task<Categoria> Criar(Categoria entidade)
+        public async Task<Categoria> Criar(Categoria entidade)
         {
-            throw new NotImplementedException();
+            await _context.Categoria.AddAsync(entidade);
+            await _context.SaveChangesAsync();
+            return entidade;
         }
 
-        public Task Deletar(Categoria entidade)
+        public async Task Deletar(Categoria entidade)
         {
-            throw new NotImplementedException();
+            var categoria = await ObterPorId(entidade.Id);
+
+            if (categoria == null) throw new Exception("Categoria não encontrada.");
+
+            _context.Categoria.Remove(categoria);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Categoria>> Obter()
+        public async Task<IEnumerable<Categoria>> Obter()
         {
-            throw new NotImplementedException();
+            return await _context.Categoria.ToListAsync();
         }
 
-        public Task<Categoria> ObterPorId(int id)
+        public async Task<Categoria> ObterPorId(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Categoria.FindAsync(id) ?? throw new Exception("Categoria não encontrada.");
         }
     }
 }

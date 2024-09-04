@@ -19,7 +19,7 @@ namespace EstoqueAPI.Domain.Repository.Class
 
             if (produto == null) throw new Exception("Produto não encontrado.");
 
-            _context.Produto.Update(produto);
+            _context.Produto.Update(entidade);
             await _context.SaveChangesAsync();
             return await ObterPorId(entidade.Id);
         }
