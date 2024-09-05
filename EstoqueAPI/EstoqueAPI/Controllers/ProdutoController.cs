@@ -6,7 +6,7 @@ namespace EstoqueAPI.Controllers
 {
     [ApiController]
     [Route("produto")]
-    public class ProdutoController : Controller
+    public class ProdutoController : ControllerBase
     {
         private readonly IBaseService<ProdutoRequestContract, ProdutoResponseContract, int> _service;
         public ProdutoController(IBaseService<ProdutoRequestContract, ProdutoResponseContract, int> service)
@@ -42,11 +42,8 @@ namespace EstoqueAPI.Controllers
         public async Task<ActionResult<ProdutoResponseContract>> Atualizar(int id, [FromBody] ProdutoRequestContract request)
         {
             if (!ModelState.IsValid) return BadRequest();
-
             var produtoAtualizado = await _service.Atualizar(id, request);
-
             if (produtoAtualizado == null) return NotFound();
-
             return Ok(produtoAtualizado);
         }
 
