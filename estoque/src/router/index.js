@@ -1,13 +1,15 @@
-
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
-import { routes } from 'vue-router/auto-routes'
+// import { routes } from 'vue-router/auto-routes'
+
+import controleEstoque from '@/pages/controle-estoque.vue'
+
+const routes = [
+  {
+    path: '/controle-estoque',
+    name: 'controleEstoque',
+    component: controleEstoque,
+  },
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

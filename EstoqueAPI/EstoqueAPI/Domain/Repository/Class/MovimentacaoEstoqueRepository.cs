@@ -18,6 +18,8 @@ namespace EstoqueAPI.Domain.Repository.Class
 
             if (movimentacaoEstoque == null) throw new Exception("Movimentação de estoque não encontrada.");
 
+            _context.Entry(movimentacaoEstoque).State = EntityState.Detached;
+
             _context.MovimentacaoEstoque.Update(entidade);
             await _context.SaveChangesAsync();
             return await ObterPorId(entidade.Id);

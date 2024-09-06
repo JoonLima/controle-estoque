@@ -19,6 +19,8 @@ namespace EstoqueAPI.Domain.Repository.Class
 
             if (produto == null) throw new Exception("Produto não encontrado.");
 
+            _context.Entry(produto).State = EntityState.Detached;
+
             _context.Produto.Update(entidade);
             await _context.SaveChangesAsync();
             return await ObterPorId(entidade.Id);

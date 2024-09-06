@@ -18,6 +18,8 @@ namespace EstoqueAPI.Domain.Repository.Class
 
             if (categoria == null) throw new Exception("Categoria não encontrada.");
 
+            _context.Entry(categoria).State = EntityState.Detached;
+
             _context.Categoria.Update(entidade);
             await _context.SaveChangesAsync();
             return await ObterPorId(entidade.Id);
