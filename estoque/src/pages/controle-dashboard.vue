@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1>teste movimentacao</h1>
+    <h1>dashboard</h1>
   </div>
 </template>

@@ -1,10 +1,11 @@
 <template>
   <div class="menu">
-    <span class="titulo">Controle de estoque</span>
+    <router-link to="/" class="titulo">Controle de estoque</router-link>
     <div class="opcoes-menu">
-      <router-link>Produtos</router-link>
-      <router-link>Categorias</router-link>
-      <router-link>Movimentações</router-link>
+      <router-link to="/">Dashboard</router-link>
+      <router-link to="/controle-produtos">Produtos</router-link>
+      <router-link to="controle-categorias">Categorias</router-link>
+      <router-link to="controle-movimentacao">Movimentações</router-link>
       <v-switch :onchange="alterarTema" hide-details inset></v-switch>
     </div>
   </div>
@@ -32,7 +33,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 15px;
+  padding: 0 1.5rem;
   background-color: #00609c;
 
   .titulo {
@@ -40,6 +41,7 @@ export default {
     font-weight: 500;
     letter-spacing: 2px;
     color: #fff;
+    text-decoration: none;
   }
 
   .opcoes-menu {

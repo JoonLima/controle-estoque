@@ -1,4 +1,3 @@
-using AutoMapper;
 using EstoqueAPI.AutoMapper;
 using EstoqueAPI.Contract.Categoria;
 using EstoqueAPI.Contract.MovimentacaoEstoque;
@@ -16,9 +15,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()  // Permite qualquer origem
+                   .AllowAnyMethod()  // Permite qualquer método HTTP (GET, POST, etc.)
+                   .AllowAnyHeader(); // Permite qualquer cabeçalho
+        });
+});
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
@@ -51,6 +61,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// Use CORS policy
+app.UseCors("AllowAllOrigins");
 
 app.MapControllers();
 

@@ -1,0 +1,212 @@
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="produtos"
+    :sort-by="[{ key: 'id', order: 'asc' }]"
+  >
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-dialog v-model="abrirModal" max-width="70%">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              class="mb-2"
+              variant="outlined"
+              prepend-icon="mdi-plus"
+              @click="novoProduto"
+              v-bind="props"
+            >
+              Novo produto
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">{{ modoEdicao ? 'Editar' : 'Novo' }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="2" md="2" sm="2">
+                    <v-text-field
+                      v-model="produto.id"
+                      disabled
+                      label="ID"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="10" sm="10">
+                    <v-text-field
+                      v-model="produto.nome"
+                      label="Nome"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="4" sm="12">
+                    <v-text-field
+                      v-model="produto.quantidadeEstoque"
+                      label="Estoque"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="4" sm="12">
+                    <v-text-field
+                      v-model="produto.preco"
+                      label="Preço"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="4" sm="12">
+                    <v-text-field
+                      v-model="produto.idCategoria"
+                      label="Categoria"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="12" sm="12">
+                    <v-textarea
+                      v-model="produto.descricao"
+                      label="Descrição"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue-darken-1" variant="text" @click="salvar">
+                Salvar
+              </v-btn>
+              <v-btn color="blue-darken-1" variant="text" @click="fecharModal">
+                Cancelar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:[`item.acao`]="{ item }">
+      <v-icon class="me-2" size="small" @click="editar(item)">
+        mdi-pencil
+      </v-icon>
+      <v-icon size="small" @click="deletar(item)"> mdi-delete </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <span>Nenhum item</span>
+    </template>
+  </v-data-table>
+
+  <!-- modal deletar -->
+  <v-dialog v-model="dialogDelete" max-width="500px">
+    <v-card>
+      <v-card-title class="text-h5"
+        >Deseja excluir o produto {{ produto.id }} -
+        {{ produto.nome }}</v-card-title
+      >
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="dialogDelete = false"
+          >Cancel</v-btn
+        >
+        <v-btn color="blue-darken-1" variant="text" @click="confirmarDelete"
+          >OK</v-btn
+        >
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+import ModalPadrao from '@/components/ModalPadrao.vue';
+import { COLUNAS_TABELA_PRODUTO } from '@/constants/constants';
+import Produto from '@/models/produto-model';
+import produtoService from '@/services/produto-service';
+
+export default {
+  components: { ModalPadrao },
+  data: () => ({
+    abrirModal: false,
+    produto: new Produto(),
+    produtos: [],
+    dialogDelete: false,
+    modoEdicao: false,
+    headers: COLUNAS_TABELA_PRODUTO,
+  }),
+
+  methods: {
+    fecharModal() {
+      this.abrirModal = false;
+    },
+
+    obterProdutos() {
+      produtoService
+        .obterTodos()
+        .then((res) => {
+          this.produtos = res.data.map((p) => new Produto(p));
+        })
+        .catch((error) => console.log(error));
+    },
+
+    novoProduto() {
+      this.produto = new Produto();
+      this.modoEdicao = false;
+    },
+
+    editar(item) {
+      this.produto = new Produto(item);
+      this.modoEdicao = true;
+      this.abrirModal = true;
+    },
+
+    salvarEdicao() {
+      if (!this.produto.modeloValido()) {
+        return;
+      }
+
+      produtoService
+        .atualizar(this.produto.id, this.produto)
+        .then((res) => {
+          console.log(res);
+          this.obterProdutos();
+          this.abrirModal = false;
+        })
+        .catch((err) => console.log(err));
+    },
+
+    salvarNovo() {
+      if (!this.produto.modeloValido()) return;
+
+      produtoService
+        .criar(this.produto)
+        .then((res) => {
+          console.log(res);
+          this.obterProdutos();
+          this.abrirModal = false;
+        })
+        .catch((err) => console.log(err));
+    },
+
+    salvar() {
+      this.modoEdicao ? this.salvarEdicao() : this.salvarNovo();
+    },
+
+    deletar(item) {
+      this.produto = new Produto(item);
+      this.dialogDelete = true;
+    },
+
+    confirmarDelete() {
+      produtoService
+        .deletar(this.produto.id)
+        .then(() => {
+          this.obterProdutos();
+          this.dialogDelete = false;
+        })
+        .catch((err) => console.log(err));
+    },
+  },
+
+  created() {
+    this.obterProdutos();
+  },
+};
+</script>
