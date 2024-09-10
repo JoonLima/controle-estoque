@@ -1,7 +1,5 @@
 export default class Produto {
-  constructor(obj) {
-    obj = obj || {};
-
+  constructor(obj = {}) {
     this.id = obj.id;
     this.nome = obj.nome;
     this.descricao = obj.descricao;

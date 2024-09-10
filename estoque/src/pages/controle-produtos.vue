@@ -52,10 +52,18 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="4" sm="12">
-                    <v-text-field
+                    <v-select
+                      v-model="produto.idCategoria"
+                      :items="categorias"
+                      item-title="nome"
+                      item-value="id"
+                      label="Categoria"
+                    >
+                    </v-select>
+                    <!-- <v-text-field
                       v-model="produto.idCategoria"
                       label="Categoria"
-                    ></v-text-field>
+                    ></v-text-field> -->
                   </v-col>
                   <v-col cols="12" md="12" sm="12">
                     <v-textarea
@@ -79,6 +87,9 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+    </template>
+    <template v-slot:[`item.idCategoria`]="{ item }">
+      <span>{{ getCategoriaNome(item.idCategoria) }}</span>
     </template>
     <template v-slot:[`item.acao`]="{ item }">
       <v-icon class="me-2" size="small" @click="editar(item)">
@@ -118,7 +129,9 @@
 <script>
 import ModalPadrao from '@/components/ModalPadrao.vue';
 import { COLUNAS_TABELA_PRODUTO } from '@/constants/constants';
+import Categoria from '@/models/categoria-model';
 import Produto from '@/models/produto-model';
+import categoriaService from '@/services/categoria-service';
 import produtoService from '@/services/produto-service';
 
 export default {
@@ -126,6 +139,7 @@ export default {
   data: () => ({
     abrirModal: false,
     produto: new Produto(),
+    categorias: [],
     produtos: [],
     dialogDelete: false,
     modoEdicao: false,
@@ -142,6 +156,16 @@ export default {
         .obterTodos()
         .then((res) => {
           this.produtos = res.data.map((p) => new Produto(p));
+        })
+        .catch((error) => console.log(error));
+    },
+
+    obterCategorias() {
+      categoriaService
+        .obterTodos()
+        .then((res) => {
+          this.categorias = res.data.map((c) => new Categoria(c));
+          console.log(this.categorias);
         })
         .catch((error) => console.log(error));
     },
@@ -203,10 +227,18 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+
+    getCategoriaNome(idCategoria) {
+      const categoria = this.categorias.find((c) => c.id === idCategoria);
+      return categoria ? categoria.nome : 'Categoria não encontrada';
+    },
   },
+
+  computed: {},
 
   created() {
     this.obterProdutos();
+    this.obterCategorias();
   },
 };
 </script>

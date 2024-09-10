@@ -9,13 +9,10 @@ const COLUNAS_TABELA_PRODUTO = [
 ];
 
 const COLUNAS_TABELA_CATEGORIA = [
-  { text: 'Código', value: 'id' },
+  { text: 'ID', value: 'id' },
   { text: 'Nome', value: 'nome' },
-  { text: 'Valor', value: 'valor' },
-  { text: 'Quantidade', value: 'quantidadeEstoque' },
-  { text: 'Observação', value: 'observacao' },
-  { text: 'Data cadastro', value: 'dataCadastro' },
-  { text: 'Actions', value: 'actions', sortable: false },
+  { text: 'Descrição', value: 'descrição' },
+  { title: '', key: 'acao', sortable: false },
 ];
 
 const COLUNAS_TABELA_MOVIMENTACAO = [
@@ -25,7 +22,7 @@ const COLUNAS_TABELA_MOVIMENTACAO = [
   { text: 'Quantidade', value: 'quantidadeEstoque' },
   { text: 'Observação', value: 'observacao' },
   { text: 'Data cadastro', value: 'dataCadastro' },
-  { text: 'Actions', value: 'actions', sortable: false },
+  { title: '', key: 'acao', sortable: false },
 ];
 
 export {
