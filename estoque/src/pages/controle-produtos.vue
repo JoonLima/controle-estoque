@@ -60,10 +60,6 @@
                       label="Categoria"
                     >
                     </v-select>
-                    <!-- <v-text-field
-                      v-model="produto.idCategoria"
-                      label="Categoria"
-                    ></v-text-field> -->
                   </v-col>
                   <v-col cols="12" md="12" sm="12">
                     <v-textarea
@@ -77,10 +73,10 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="salvar">
+              <v-btn color="primary" variant="flat" @click="salvar">
                 Salvar
               </v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="fecharModal">
+              <v-btn color="primary" variant="outlined" @click="fecharModal">
                 Cancelar
               </v-btn>
             </v-card-actions>
@@ -111,14 +107,11 @@
       >
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="dialogDelete = false"
-          >Cancel</v-btn
-        >
-        <v-btn color="blue-darken-1" variant="text" @click="confirmarDelete"
+        <v-btn color="primary" variant="flat" @click="confirmarDelete"
           >OK</v-btn
+        >
+        <v-btn color="primary" variant="outlined" @click="dialogDelete = false"
+          >Cancel</v-btn
         >
         <v-spacer></v-spacer>
       </v-card-actions>
