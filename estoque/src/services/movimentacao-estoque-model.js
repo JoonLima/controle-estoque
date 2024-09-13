@@ -3,8 +3,8 @@ import http from './api';
 function obterTodos() {
   return new Promise((resolve, reject) => {
     return http
-      .get('/categoria')
-      .then((res) => resolve(res))
+      .get('/movimentacao-estoque')
+      .then((response) => resolve(response))
       .catch((error) => reject(error));
   });
 }
@@ -12,26 +12,26 @@ function obterTodos() {
 function obterPorId(id) {
   return new Promise((resolve, reject) => {
     return http
-      .get(`/categoria/${id}`)
-      .then((res) => resolve(res))
+      .get(`/movimentacao-estoque/${id}`)
+      .then((response) => resolve(response))
       .catch((error) => reject(error));
   });
 }
 
-function criar(categoria) {
+function criar(movimentacao) {
   return new Promise((resolve, reject) => {
     return http
-      .post('/categoria', categoria)
-      .then((res) => resolve(res))
+      .post('/movimentacao-estoque', movimentacao)
+      .then((response) => resolve(response))
       .catch((error) => reject(error));
   });
 }
 
-function atualizar(id, categoria) {
+function atualizar(id, movimentacao) {
   return new Promise((resolve, reject) => {
     return http
-      .put(`/categoria/${id}`, categoria)
-      .then((res) => resolve(res))
+      .put(`/movimentacao-estoque${id}`, movimentacao)
+      .then((response) => resolve(response))
       .catch((error) => reject(error));
   });
 }
@@ -39,8 +39,8 @@ function atualizar(id, categoria) {
 function deletar(id) {
   return new Promise((resolve, reject) => {
     return http
-      .delete(`/categoria/${id}`)
-      .then((res) => resolve(res))
+      .delete(`/movimentacao-estoque/${id}`)
+      .then((response) => resolve(response))
       .catch((error) => reject(error));
   });
 }

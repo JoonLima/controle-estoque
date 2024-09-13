@@ -5,14 +5,14 @@ const COLUNAS_TABELA_PRODUTO = [
   { title: 'Preço', key: 'preco' },
   { title: 'Categoria', key: 'idCategoria' },
   { title: 'Descrição', key: 'descricao' },
-  { title: '', key: 'acao', sortable: false },
+  { title: '', key: 'acao', sortable: false, width: '100px', align: 'center' },
 ];
 
 const COLUNAS_TABELA_CATEGORIA = [
-  { text: 'ID', value: 'id' },
-  { text: 'Nome', value: 'nome' },
-  { text: 'Descrição', value: 'descrição' },
-  { title: '', key: 'acao', sortable: false },
+  { title: 'ID', align: 'start', key: 'id' },
+  { title: 'Nome', key: 'nome' },
+  { title: 'Descrição', key: 'descricao' },
+  { title: '', key: 'acao', sortable: false, width: '100px', align: 'center' },
 ];
 
 const COLUNAS_TABELA_MOVIMENTACAO = [
@@ -22,7 +22,7 @@ const COLUNAS_TABELA_MOVIMENTACAO = [
   { text: 'Quantidade', value: 'quantidadeEstoque' },
   { text: 'Observação', value: 'observacao' },
   { text: 'Data cadastro', value: 'dataCadastro' },
-  { title: '', key: 'acao', sortable: false },
+  { title: '', key: 'acao', sortable: false, width: '100px', align: 'center' },
 ];
 
 export {

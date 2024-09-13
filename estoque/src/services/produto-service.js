@@ -1,4 +1,4 @@
-import http from '@/services/api';
+import http from './api';
 
 function obterTodos() {
   return new Promise((resolve, reject) => {

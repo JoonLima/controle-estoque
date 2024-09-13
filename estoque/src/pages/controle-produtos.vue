@@ -120,7 +120,6 @@
 </template>
 
 <script>
-import ModalPadrao from '@/components/ModalPadrao.vue';
 import { COLUNAS_TABELA_PRODUTO } from '@/constants/constants';
 import Categoria from '@/models/categoria-model';
 import Produto from '@/models/produto-model';
@@ -128,7 +127,6 @@ import categoriaService from '@/services/categoria-service';
 import produtoService from '@/services/produto-service';
 
 export default {
-  components: { ModalPadrao },
   data: () => ({
     abrirModal: false,
     produto: new Produto(),
@@ -216,6 +214,7 @@ export default {
         .deletar(this.produto.id)
         .then(() => {
           this.obterProdutos();
+          this.produto = new Produto();
           this.dialogDelete = false;
         })
         .catch((err) => console.log(err));
