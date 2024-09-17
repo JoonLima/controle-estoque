@@ -16,12 +16,11 @@ const COLUNAS_TABELA_CATEGORIA = [
 ];
 
 const COLUNAS_TABELA_MOVIMENTACAO = [
-  { text: 'Código', value: 'id' },
-  { text: 'Nome', value: 'nome' },
-  { text: 'Valor', value: 'valor' },
-  { text: 'Quantidade', value: 'quantidadeEstoque' },
-  { text: 'Observação', value: 'observacao' },
-  { text: 'Data cadastro', value: 'dataCadastro' },
+  { title: 'ID', align: 'start', key: 'id' },
+  { title: 'Tipo', key: 'tipoMovimentacao' },
+  { title: 'Produto', key: 'idProduto' },
+  { title: 'Quantidade', key: 'quantidade' },
+  { title: 'Data', key: 'dataMovimentacao' },
   { title: '', key: 'acao', sortable: false, width: '100px', align: 'center' },
 ];
 

@@ -30,7 +30,7 @@ function criar(movimentacao) {
 function atualizar(id, movimentacao) {
   return new Promise((resolve, reject) => {
     return http
-      .put(`/movimentacao-estoque${id}`, movimentacao)
+      .put(`/movimentacao-estoque/${id}`, movimentacao)
       .then((response) => resolve(response))
       .catch((error) => reject(error));
   });

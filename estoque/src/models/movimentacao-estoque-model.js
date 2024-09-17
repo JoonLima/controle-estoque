@@ -3,7 +3,7 @@ export default class MovimentacaoEstoque {
     this.id = obj.id;
     this.idProduto = obj.idProduto;
     this.quantidade = obj.quantidade;
-    this.dataMovimentacao = obj.dataMovimentacao || new Date();
+    this.dataMovimentacao = obj.dataMovimentacao || '';
     this.tipoMovimentacao = obj.tipoMovimentacao;
     this.observacao = obj.observacao;
   }

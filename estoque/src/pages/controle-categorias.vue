@@ -66,9 +66,6 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:[`item.idCategoria`]="{ item }">
-      <span>{{ getCategoriaNome(item.idCategoria) }}</span>
-    </template>
     <template v-slot:[`item.acao`]="{ item }">
       <v-icon class="me-2" size="small" @click="editar(item)">
         mdi-pencil
