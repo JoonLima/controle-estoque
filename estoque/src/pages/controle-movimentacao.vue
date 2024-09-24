@@ -61,7 +61,7 @@
                   </v-col>
                   <v-col cols="2" md="2" sm="12">
                     <v-text-field
-                      :v-model="movimentacaoEstoque.quantidade || 0"
+                      v-model="movimentacaoEstoque.quantidade"
                       label="Quantidade"
                     ></v-text-field>
                   </v-col>
@@ -143,18 +143,15 @@ import { COLUNAS_TABELA_MOVIMENTACAO } from '@/constants/constants';
 import MovimentacaoEstoque from '@/models/movimentacao-estoque-model';
 import Produto from '@/models/produto-model';
 import formatador from '@/util/formatador.js';
-import { VDateInput } from 'vuetify/labs/VDateInput';
 
 export default {
-  components: {
-    VDateInput,
-  },
   data: () => ({
     menu: false,
     abrirModal: false,
     movimentacaoEstoque: new MovimentacaoEstoque(),
     movimentacoes: [],
     produtos: [],
+    produtoSelecionado: new Produto(),
     quantidadeEstoqueProduto: '',
     dialogDelete: false,
     modoEdicao: false,
@@ -201,12 +198,20 @@ export default {
 
     salvarNovo() {
       if (!this.movimentacaoEstoque.modeloValido()) {
+        alert('Preencha todos os campos corretamente.');
         return;
       }
+      const estoqueValido = this.movimentarEstoqueProduto();
+
+      if (!estoqueValido) return;
+
       movimentacaoEstoqueService
         .criar(this.movimentacaoEstoque)
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          produtoService
+            .atualizar(this.produtoSelecionado.id, this.produtoSelecionado)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
           this.obterMovimentacoes();
           this.abrirModal = false;
         })
@@ -214,7 +219,12 @@ export default {
     },
 
     salvarEdicao() {
-      if (!this.movimentacaoEstoque.modeloValido()) return;
+      if (!this.movimentacaoEstoque.modeloValido()) {
+        alert('Preencha todos os campos corretamente.');
+        return;
+      }
+
+      this.movimentarEstoqueProduto();
 
       movimentacaoEstoqueService
         .atualizar(this.movimentacaoEstoque.id, this.movimentacaoEstoque)
@@ -260,11 +270,47 @@ export default {
       const produto = this.produtos.find((p) => p.id === idProduto);
       return produto ? produto.nome : 'Produto não encontrado';
     },
+
+    movimentarEstoqueProduto() {
+      if (this.modoEdicao) {
+        // Aqui você pode recalcular o estoque com base na diferença entre a movimentação antiga e a nova
+        const quantidadeAnterior = this.movimentacoes.find(
+          (m) => m.id === this.movimentacaoEstoque.id
+        ).quantidade;
+
+        if (this.movimentacaoEstoque.tipoMovimentacao === 'Saída') {
+          this.produtoSelecionado.quantidadeEstoque += quantidadeAnterior; // desfaz a saída antiga
+          this.produtoSelecionado.quantidadeEstoque -=
+            this.movimentacaoEstoque.quantidade; // aplica a nova saída
+        }
+
+        if (this.movimentacaoEstoque.tipoMovimentacao === 'Entrada') {
+          this.produtoSelecionado.quantidadeEstoque -= quantidadeAnterior; // desfaz a entrada antiga
+          this.produtoSelecionado.quantidadeEstoque +=
+            this.movimentacaoEstoque.quantidade; // aplica a nova entrada
+        }
+      }
+
+      let quantidadeMovimentada = parseInt(this.movimentacaoEstoque.quantidade);
+
+      if (this.movimentacaoEstoque.tipoMovimentacao === 'Saída') {
+        if (this.produtoSelecionado.quantidadeEstoque < quantidadeMovimentada) {
+          alert('Quantidade de saída maior que o estoque disponível!');
+          return; // Não prossegue com a movimentação
+        }
+        this.produtoSelecionado.quantidadeEstoque -= quantidadeMovimentada;
+      }
+
+      if (this.movimentacaoEstoque.tipoMovimentacao === 'Entrada') {
+        this.produtoSelecionado.quantidadeEstoque += quantidadeMovimentada;
+      }
+    },
   },
 
   watch: {
     'movimentacaoEstoque.idProduto'(idProdutoSelecionado) {
       const produto = this.produtos.find((p) => p.id === idProdutoSelecionado);
+      this.produtoSelecionado = new Produto(produto);
 
       if (produto) {
         this.quantidadeEstoqueProduto = produto.quantidadeEstoque;
